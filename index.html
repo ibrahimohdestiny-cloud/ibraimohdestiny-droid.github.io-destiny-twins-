@@ -4,126 +4,425 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Destiny Twins AI</title>
+<title>Destiny Twins - Private AI</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#0b1020;color:white}
-header{padding:20px;background:#151e35;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:23px;font-weight:bold;color:#70a5ff}
-main{max-width:950px;margin:35px auto;padding:20px}
-h1{font-size:32px}
-p{color:#b9c4d9;line-height:1.6}
-.card{background:#151e35;border:1px solid #293653;border-radius:15px;padding:22px;margin:18px 0}
-button{background:#3979ee;color:white;border:0;padding:13px 18px;border-radius:9px;cursor:pointer;font-weight:bold}
-button:hover{background:#245ec7}
-input{width:100%;padding:14px;border-radius:9px;border:1px solid #394969;background:#0d1629;color:white;margin:10px 0}
-textarea{width:100%;padding:14px;border-radius:9px;background:#0d1629;color:white;border:1px solid #394969;min-height:100px}
-nav{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
-nav button{background:#24334f}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f1f4fa;
+ color:#172033;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+header{
+ background:#101d42;
+ color:white;
+ padding:18px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+}
+.brand{font-size:21px;font-weight:bold}
+#login{
+ max-width:420px;
+ margin:70px auto;
+ padding:25px;
+ background:white;
+ border-radius:15px;
+ box-shadow:0 5px 25px #0001;
+}
+#login h1{text-align:center;color:#2447a5}
+input,textarea{
+ width:100%;
+ padding:13px;
+ margin:8px 0;
+ border:1px solid #d6ddeb;
+ border-radius:8px;
+}
+button{
+ border:0;
+ padding:12px 16px;
+ border-radius:8px;
+ background:#3159c9;
+ color:white;
+}
+.primary{width:100%;margin-top:10px}
+#app{display:none}
+.layout{display:flex;min-height:90vh}
+nav{
+ width:220px;
+ background:white;
+ padding:15px;
+}
+nav button{
+ display:block;
+ width:100%;
+ text-align:left;
+ margin-bottom:10px;
+ background:#eef2ff;
+ color:#203c91;
+}
+main{padding:25px;flex:1;max-width:1100px}
+.card{
+ background:white;
+ border-radius:13px;
+ padding:20px;
+ margin-bottom:18px;
+ box-shadow:0 3px 15px #00000008;
+}
+.welcome{
+ background:#1c367e;
+ color:white;
+ padding:25px;
+ border-radius:13px;
+}
+.welcome p{color:#e0e7ff}
 .section{display:none}
 .section.active{display:block}
-#messages{height:260px;overflow:auto;background:#0d1629;padding:15px;border-radius:10px;margin-bottom:12px}
-.msg{padding:10px;margin:8px 0;border-radius:8px;background:#24334f}
-footer{text-align:center;color:#8998b5;padding:30px}
+.muted{color:#748096;font-size:14px}
+.file{
+ padding:12px;
+ border-bottom:1px solid #eee;
+ overflow-wrap:anywhere;
+}
+#messages{
+ height:300px;
+ overflow:auto;
+ background:#f3f5fa;
+ padding:12px;
+ border-radius:10px;
+}
+.message{
+ padding:12px;
+ margin:9px 0;
+ border-radius:10px;
+ background:white;
+ overflow-wrap:anywhere;
+}
+.user{background:#e5edff}
+footer{text-align:center;padding:20px;color:#777}
+@media(max-width:650px){
+ .layout{display:block}
+ nav{
+  width:100%;
+  display:flex;
+  overflow-x:auto;
+  gap:6px;
+ }
+ nav button{min-width:120px;text-align:center}
+ main{padding:12px}
+ #login{margin:35px 15px}
+}
 </style>
 </head>
+
 <body>
+
 <header>
-<div class="logo">✦ DESTINY TWINS</div>
-<div>Private AI</div>
+ <div class="brand">✦ DESTINY TWINS</div>
+ <span>Private AI Assistant</span>
 </header>
 
-<main>
-<section id="login" class="card">
-<h1>Welcome to Destiny Twins</h1>
-<p>Your personal knowledge assistant. Your information, your AI.</p>
-<input id="email" type="email" placeholder="Your email address">
-<input id="password" type="password" placeholder="Your password">
-<button onclick="login()">Sign in</button>
-<p id="loginMessage"></p>
-</section>
+<div id="login">
+ <h1>Destiny Twins</h1>
+ <p style="text-align:center">Your personal knowledge assistant</p>
 
-<section id="dashboard" style="display:none">
-<h1>Welcome to Destiny Twins 👋</h1>
-<p>Your private AI knowledge assistant.</p>
+ <form id="loginForm">
+  <input id="email" type="email" placeholder="Email address" required>
+  <input id="password" type="password" placeholder="Password" required>
+  <button class="primary" type="submit">Login to your account</button>
+ </form>
+
+ <p id="loginMessage" class="muted"></p>
+</div>
+
+<div id="app">
+
+<div class="layout">
 
 <nav>
-<button onclick="showSection('home')">Home</button>
-<button onclick="showSection('upload')">Upload files</button>
-<button onclick="showSection('library')">Knowledge library</button>
-<button onclick="showSection('chat')">AI chat</button>
-<button onclick="logout()">Logout</button>
+ <button onclick="showPage('home')">🏠 Dashboard</button>
+ <button onclick="showPage('upload')">📁 Upload Documents</button>
+ <button onclick="showPage('library')">📚 Knowledge Library</button>
+ <button onclick="showPage('chat')">💬 AI Assistant</button>
+ <button onclick="logout()">🚪 Logout</button>
 </nav>
 
-<div id="home" class="section active card">
-<h2>Your AI dashboard</h2>
-<p>Upload your documents and ask questions about the information inside them.</p>
-<p>Start by adding your first knowledge document.</p>
-</div>
+<main>
 
-<div id="upload" class="section card">
-<h2>Upload knowledge</h2>
-<p>Select a document to add to your knowledge library.</p>
-<input id="fileInput" type="file" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
-<button onclick="uploadFile()">Add document</button>
-<p id="uploadMessage"></p>
-</div>
+<section id="home" class="section active">
+ <div class="welcome">
+  <h2>Welcome to Destiny Twins</h2>
+  <p>Your private knowledge and intelligent assistant.</p>
+ </div>
 
-<div id="library" class="section card">
-<h2>My knowledge library</h2>
-<div id="fileList">No documents uploaded yet.</div>
-</div>
+ <div class="card">
+  <h3>📁 Your Documents</h3>
+  <h2 id="total">0</h2>
+  <p class="muted">Uploaded documents</p>
+ </div>
 
-<div id="chat" class="section card">
-<h2>Ask Destiny Twins</h2>
-<div id="messages">
-<div class="msg">Hello! Upload your knowledge to get started.</div>
-</div>
-<textarea id="question" placeholder="Ask a question about your information..."></textarea>
-<br><br>
-<button onclick="askAI()">Send question</button>
-</div>
+ <div class="card">
+  <h3>🧠 Your Personal AI</h3>
+  <p>Upload your information and use it as the knowledge source for your AI.</p>
+  <button onclick="showPage('upload')">Upload Knowledge</button>
+ </div>
 </section>
-</main>
 
-<footer>© 2026 Destiny Twins AI</footer>
+<section id="upload" class="section">
+ <div class="card">
+  <h2>Upload Your Knowledge</h2>
+  <p class="muted">Choose a PDF, Word document, text file or image.</p>
+
+  <input id="fileInput" type="file"
+   accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
+
+  <button class="primary" onclick="uploadFile()">Upload Document</button>
+
+  <p id="uploadMessage"></p>
+ </div>
+</section>
+
+<section id="library" class="section">
+ <div class="card">
+  <h2>My Knowledge Library</h2>
+  <p class="muted">Your uploaded documents.</p>
+  <div id="fileList">Loading...</div>
+ </div>
+</section>
+
+<section id="chat" class="section">
+ <div class="card">
+  <h2>Destiny Twins AI</h2>
+  <p class="muted">Ask questions about your personal knowledge.</p>
+
+  <div id="messages">
+   <div class="message">
+    Hello! Welcome to Destiny Twins.
+   </div>
+  </div>
+
+  <textarea id="question"
+   placeholder="Ask your question here..."></textarea>
+
+  <button class="primary" onclick="askAI()">Send Question</button>
+
+  <p class="muted" id="chatStatus">
+   AI answering service will be connected through the secure backend.
+  </p>
+ </div>
+</section>
+
+</main>
+</div>
+</div>
+
+<footer>© 2026 Destiny Twins. Private Knowledge AI.</footer>
 
 <script>
-function login(){
- document.getElementById('loginMessage').textContent=
- "Login connection will be activated when Supabase is connected.";
+
+// SUPABASE CONNECTION
+// Replace these two placeholders with your own project details.
+
+const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
+
+let db = null;
+let currentUser = null;
+
+if(SUPABASE_URL.startsWith("https://") &&
+   SUPABASE_KEY !== "YOUR_SUPABASE_PUBLISHABLE_KEY"){
+ db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+ );
 }
-function showSection(id){
- document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
- document.getElementById(id).classList.add('active');
+
+// LOGIN
+document.getElementById("loginForm").addEventListener("submit",async function(e){
+ e.preventDefault();
+
+ const msg=document.getElementById("loginMessage");
+
+ if(!db){
+  msg.textContent="Supabase connection details are not configured yet.";
+  return;
+ }
+
+ msg.textContent="Checking your account...";
+
+ const {data,error}=await db.auth.signInWithPassword({
+  email:document.getElementById("email").value,
+  password:document.getElementById("password").value
+ });
+
+ if(error){
+  msg.textContent=error.message;
+  return;
+ }
+
+ currentUser=data.user;
+ openDashboard();
+});
+
+// CHECK EXISTING SESSION
+async function checkSession(){
+ if(!db)return;
+
+ const {data}=await db.auth.getSession();
+
+ if(data.session){
+  currentUser=data.session.user;
+  openDashboard();
+ }
 }
-function uploadFile(){
- const file=document.getElementById('fileInput').files[0];
- if(!file){alert('Please select a document first.');return;}
- document.getElementById('uploadMessage').textContent=
- 'Selected: '+file.name+'. Secure upload will be connected next.';
- document.getElementById('fileList').textContent=file.name;
+
+// OPEN DASHBOARD
+function openDashboard(){
+ document.getElementById("login").style.display="none";
+ document.getElementById("app").style.display="block";
+ loadFiles();
 }
+
+// NAVIGATION
+function showPage(page){
+ document.querySelectorAll(".section").forEach(s=>{
+  s.classList.remove("active");
+ });
+ document.getElementById(page).classList.add("active");
+
+ if(page==="library")loadFiles();
+}
+
+// UPLOAD DOCUMENT
+async function uploadFile(){
+ const file=document.getElementById("fileInput").files[0];
+ const msg=document.getElementById("uploadMessage");
+
+ if(!file){
+  msg.textContent="Please select a document.";
+  return;
+ }
+
+ if(!currentUser || !db){
+  msg.textContent="Please log in first.";
+  return;
+ }
+
+ if(file.size>20*1024*1024){
+  msg.textContent="File must be smaller than 20 MB.";
+  return;
+ }
+
+ msg.textContent="Uploading...";
+
+ const path=currentUser.id+"/"+crypto.randomUUID()+"-"+file.name;
+
+ const {error:uploadError}=await db.storage
+  .from("destiny-knowledge")
+  .upload(path,file);
+
+ if(uploadError){
+  msg.textContent=uploadError.message;
+  return;
+ }
+
+ const {error:saveError}=await db.from("documents").insert({
+  user_id:currentUser.id,
+  file_name:file.name,
+  file_path:path,
+  file_type:file.type,
+  status:"uploaded"
+ });
+
+ if(saveError){
+  msg.textContent="File stored, but its database record could not be saved: "+saveError.message;
+  return;
+ }
+
+ msg.textContent="Document uploaded successfully!";
+ document.getElementById("fileInput").value="";
+ loadFiles();
+}
+
+// LOAD KNOWLEDGE LIBRARY
+async function loadFiles(){
+ if(!db || !currentUser)return;
+
+ const list=document.getElementById("fileList");
+
+ const {data,error}=await db.from("documents")
+  .select("*")
+  .eq("user_id",currentUser.id)
+  .order("created_at",{ascending:false});
+
+ if(error){
+  list.textContent=error.message;
+  return;
+ }
+
+ document.getElementById("total").textContent=data.length;
+
+ list.innerHTML="";
+
+ if(data.length===0){
+  list.textContent="Your knowledge library is empty.";
+  return;
+ }
+
+ data.forEach(file=>{
+  const item=document.createElement("div");
+  item.className="file";
+
+  const name=document.createElement("strong");
+  name.textContent="📄 "+file.file_name;
+
+  const status=document.createElement("p");
+  status.className="muted";
+  status.textContent="Status: "+file.status;
+
+  item.append(name,status);
+  list.appendChild(item);
+ });
+}
+
+// AI CHAT PLACEHOLDER
 function askAI(){
- const q=document.getElementById('question').value.trim();
- if(!q)return;
- const box=document.getElementById('messages');
- const msg=document.createElement('div');
- msg.className='msg';
- msg.textContent='You: '+q;
- box.appendChild(msg);
- const reply=document.createElement('div');
- reply.className='msg';
- reply.textContent='AI connection is coming next. Your knowledge database will be connected before answers are generated.';
- box.appendChild(reply);
- document.getElementById('question').value='';
- box.scrollTop=box.scrollHeight;
+ const question=document.getElementById("question").value.trim();
+ const messages=document.getElementById("messages");
+
+ if(!question)return;
+
+ const user=document.createElement("div");
+ user.className="message user";
+ user.textContent="You: "+question;
+ messages.appendChild(user);
+
+ const answer=document.createElement("div");
+ answer.className="message";
+ answer.textContent="The secure AI answering engine has not been connected yet. Your question has not been processed.";
+ messages.appendChild(answer);
+
+ document.getElementById("question").value="";
+ messages.scrollTop=messages.scrollHeight;
 }
-function logout(){
- document.getElementById('dashboard').style.display='none';
- document.getElementById('login').style.display='block';
+
+// LOGOUT
+async function logout(){
+ if(db)await db.auth.signOut();
+
+ currentUser=null;
+ document.getElementById("app").style.display="none";
+ document.getElementById("login").style.display="block";
+ document.getElementById("loginForm").reset();
 }
+
+checkSession();
+
 </script>
 </body>
-  </html>
-  
+</html>
