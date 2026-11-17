@@ -2,82 +2,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101827">
-  <title>Destiny Twins</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>Destiny Twins AI</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f2f5fa;
-      color: #172033;
-    }
-    header {
-      background: #101827;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-    header h1 { margin: 0; letter-spacing: 2px; }
-    header p { color: #cbd5e1; }
-    .container {
-      max-width: 850px;
-      margin: 25px auto;
-      padding: 15px;
-    }
-    .card {
-      background: white;
-      padding: 22px;
-      border-radius: 14px;
-      margin-bottom: 18px;
-      box-shadow: 0 3px 12px #0000000d;
-    }
-    input, textarea, button {
-      width: 100%;
-      padding: 13px;
-      margin: 8px 0;
-      border-radius: 8px;
-      border: 1px solid #ccd3df;
-      font-size: 15px;
-    }
-    button {
-      background: #175bd5;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover { background: #1048ae; }
-    .secondary { background: #34445e; }
-    .danger { background: #a52c35; }
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
-    .nav button { width: auto; flex: 1; min-width: 100px; }
-    .hidden { display: none !important; }
-    .item {
-      padding: 12px;
-      border-bottom: 1px solid #e5e9f0;
-      overflow-wrap: anywhere;
-    }
-    .message {
-      background: #eef3ff;
-      padding: 12px;
-      border-radius: 9px;
-      margin: 10px 0;
-      overflow-wrap: anywhere;
-    }
-    .status { font-size: 14px; color: #526078; }
-    footer { text-align: center; padding: 25px; color: #64748b; }
-  </style>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f1f5f9;
+  color:#172033;
+}
+header{
+  background:#101827;
+  color:white;
+  padding:24px 15px;
+  text-align:center;
+}
+header h1{margin:0;letter-spacing:2px}
+header p{color:#cbd5e1}
+.container{max-width:900px;margin:20px auto;padding:12px}
+.card{
+  background:white;
+  padding:22px;
+  margin-bottom:18px;
+  border-radius:14px;
+  box-shadow:0 3px 12px #00000010;
+}
+input,textarea,button{
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border:1px solid #ccd3df;
+  border-radius:8px;
+  font-size:15px;
+}
+button{
+  background:#175bd5;
+  color:white;
+  border:0;
+  font-weight:bold;
+  cursor:pointer;
+}
+button.secondary{background:#34445e}
+button.danger{background:#a52c35}
+button:disabled{opacity:.6}
+.nav{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.nav button{flex:1;min-width:95px}
+.hidden{display:none!important}
+.status{font-size:14px;color:#526078;overflow-wrap:anywhere}
+.item{padding:14px 0;border-bottom:1px solid #e5e9f0}
+.message{
+  padding:13px;
+  border-radius:10px;
+  margin:10px 0;
+  background:#eef3ff;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.answer{background:#e8f7ef}
+footer{text-align:center;padding:25px;color:#64748b}
+</style>
 </head>
 
 <body>
@@ -89,181 +78,213 @@
 
 <main class="container">
 
-  <section id="loginSection" class="card">
-    <h2>Admin Login</h2>
-    <p>Sign in to access your private knowledge assistant.</p>
+<!-- LOGIN -->
+<section id="loginSection" class="card">
+  <h2>Admin Login</h2>
+  <p>Sign in to your private AI workspace.</p>
 
-    <input id="email" type="email" placeholder="Admin email">
-    <input id="password" type="password" placeholder="Password">
+  <form id="loginForm">
+    <input id="email" type="email" placeholder="Admin email" required>
+    <input id="password" type="password" placeholder="Password" required>
+    <button id="loginButton" type="submit">Login</button>
+  </form>
 
-    <button onclick="login()">Login</button>
-    <p id="loginStatus" class="status"></p>
+  <p id="loginStatus" class="status"></p>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="hidden">
+
+  <div class="card">
+    <h2>Welcome, Destiny Collins</h2>
+    <p>Your private knowledge workspace.</p>
+    <p id="userEmail" class="status"></p>
+  </div>
+
+  <nav class="nav">
+    <button data-page="home">Home</button>
+    <button data-page="upload">Upload</button>
+    <button data-page="library">Library</button>
+    <button data-page="assistant">AI Assistant</button>
+    <button class="danger" id="logoutButton">Logout</button>
+  </nav>
+
+  <!-- HOME -->
+  <section id="home" class="card page">
+    <h2>Dashboard</h2>
+    <p>Welcome to Destiny Twins.</p>
+    <p>Save your documents and build your private knowledge library.</p>
   </section>
 
-  <section id="dashboard" class="hidden">
+  <!-- UPLOAD -->
+  <section id="upload" class="card page hidden">
+    <h2>Upload Documents</h2>
+    <p>Select a document from your phone.</p>
 
-    <div class="card">
-      <h2>Welcome, Destiny Collins</h2>
-      <p>Your private knowledge workspace.</p>
-    </div>
+    <input id="fileInput" type="file"
+      accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
 
-    <nav class="nav">
-      <button onclick="showPage('home')">Home</button>
-      <button onclick="showPage('upload')">Upload</button>
-      <button onclick="showPage('library')">Library</button>
-      <button onclick="showPage('assistant')">AI Assistant</button>
-      <button class="danger" onclick="logout()">Logout</button>
-    </nav>
-
-    <section id="home" class="card page">
-      <h2>Dashboard</h2>
-      <p>Welcome to Destiny Twins.</p>
-      <p>Upload your documents and organise your knowledge.</p>
-      <p id="userEmail" class="status"></p>
-    </section>
-
-    <section id="upload" class="card page hidden">
-      <h2>Upload Documents</h2>
-      <p>Select a document to save in your private storage.</p>
-
-      <input id="fileInput" type="file"
-        accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
-
-      <button onclick="uploadFile()">Upload Document</button>
-      <p id="uploadStatus" class="status"></p>
-    </section>
-
-    <section id="library" class="card page hidden">
-      <h2>Knowledge Library</h2>
-      <button class="secondary" onclick="loadDocuments()">Refresh Library</button>
-      <div id="documentList">Your documents will appear here.</div>
-    </section>
-
-    <section id="assistant" class="card page hidden">
-      <h2>Ask Destiny Twins</h2>
-      <p>Ask questions about your uploaded knowledge.</p>
-
-      <div id="chatMessages"></div>
-
-      <textarea id="question" rows="4"
-        placeholder="Type your question here..."></textarea>
-
-      <button onclick="askAI()">Ask Question</button>
-      <p id="aiStatus" class="status"></p>
-    </section>
-
+    <button id="uploadButton">Upload Document</button>
+    <p id="uploadStatus" class="status"></p>
   </section>
+
+  <!-- LIBRARY -->
+  <section id="library" class="card page hidden">
+    <h2>Knowledge Library</h2>
+    <button class="secondary" id="refreshButton">Refresh Library</button>
+    <div id="documentList">Your documents will appear here.</div>
+  </section>
+
+  <!-- AI ASSISTANT -->
+  <section id="assistant" class="card page hidden">
+    <h2>Ask Destiny Twins</h2>
+    <p>Ask questions about your knowledge.</p>
+
+    <div id="chatMessages"></div>
+
+    <textarea id="question" rows="4"
+      placeholder="Type your question here..."></textarea>
+
+    <button id="askButton">Ask Question</button>
+    <p id="aiStatus" class="status"></p>
+  </section>
+
+</section>
 </main>
 
-<footer>
-  Destiny Twins Private Knowledge Assistant
-</footer>
+<footer>Destiny Twins Private Knowledge Assistant</footer>
 
 <script>
-  // SUPABASE CONNECTION
-  // Replace these two values with your own details.
-  const SUPABASE_URL = "PASTE_YOUR_API_URL_HERE";
-  const SUPABASE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+"use strict";
 
-  const BUCKET_NAME = "destiny-knowledge";
+/* SUPABASE CONNECTION */
+const SUPABASE_URL =
+  "https://rfzdmrobpgbkiybsjnvb.supabase.co";
 
-  let db = null;
-  let currentUser = null;
+const SUPABASE_KEY =
+  "sb_publishable_83feTq9T4oIvKKSfb1nfEg_P-P1wJ8v";
 
-  if (
-    SUPABASE_URL.startsWith("https://") &&
-    SUPABASE_KEY.startsWith("sb_publishable_")
-  ) {
-    db = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+const BUCKET_NAME = "destiny-knowledge";
+
+let db = null;
+let currentUser = null;
+
+const $ = id => document.getElementById(id);
+
+function setStatus(id, message) {
+  $(id).textContent = message;
+}
+
+/* INITIALISE SUPABASE */
+if (window.supabase) {
+  db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+} else {
+  setStatus("loginStatus", "Supabase library could not load. Check your internet connection.");
+}
+
+/* LOGIN */
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (!db) {
+    setStatus("loginStatus", "Supabase is not connected.");
+    return;
   }
 
-  function showPage(page) {
-    document.querySelectorAll(".page").forEach(section => {
-      section.classList.add("hidden");
-    });
+  const email = $("email").value.trim();
+  const password = $("password").value;
 
-    document.getElementById(page).classList.remove("hidden");
+  $("loginButton").disabled = true;
+  setStatus("loginStatus", "Signing in...");
 
-    if (page === "library") loadDocuments();
-  }
-
-  async function login() {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    const status = document.getElementById("loginStatus");
-
-    if (!db) {
-      status.textContent = "Please add your Supabase API URL and Publishable key.";
-      return;
-    }
-
-    if (!email || !password) {
-      status.textContent = "Enter your email and password.";
-      return;
-    }
-
-    status.textContent = "Signing in...";
-
+  try {
     const { data, error } = await db.auth.signInWithPassword({
       email,
       password
     });
 
-    if (error) {
-      status.textContent = error.message;
-      return;
-    }
+    if (error) throw error;
 
     currentUser = data.user;
     openDashboard();
+
+  } catch (error) {
+    setStatus("loginStatus", error.message);
+  } finally {
+    $("loginButton").disabled = false;
   }
+});
 
-  function openDashboard() {
-    document.getElementById("loginSection").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-    document.getElementById("userEmail").textContent =
-      "Signed in as: " + currentUser.email;
-    loadDocuments();
-  }
+/* OPEN DASHBOARD */
+function openDashboard() {
+  $("loginSection").classList.add("hidden");
+  $("dashboard").classList.remove("hidden");
 
-  async function logout() {
-    if (db) await db.auth.signOut();
+  $("userEmail").textContent =
+    "Signed in as: " + currentUser.email;
 
+  showPage("home");
+  loadDocuments();
+}
+
+/* NAVIGATION */
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(section => {
+    section.classList.add("hidden");
+  });
+
+  $(page).classList.remove("hidden");
+
+  if (page === "library") loadDocuments();
+}
+
+document.querySelectorAll("[data-page]").forEach(button => {
+  button.addEventListener("click", () => {
+    showPage(button.dataset.page);
+  });
+});
+
+/* LOGOUT */
+$("logoutButton").addEventListener("click", async () => {
+  try {
+    await db.auth.signOut();
+  } finally {
     currentUser = null;
-    document.getElementById("dashboard").classList.add("hidden");
-    document.getElementById("loginSection").classList.remove("hidden");
+    $("dashboard").classList.add("hidden");
+    $("loginSection").classList.remove("hidden");
+  }
+});
+
+/* UPLOAD DOCUMENT */
+$("uploadButton").addEventListener("click", async () => {
+  const file = $("fileInput").files[0];
+
+  if (!file) {
+    setStatus("uploadStatus", "Choose a document first.");
+    return;
   }
 
-  async function uploadFile() {
-    const file = document.getElementById("fileInput").files[0];
-    const status = document.getElementById("uploadStatus");
+  if (!currentUser) {
+    setStatus("uploadStatus", "Please log in first.");
+    return;
+  }
 
-    if (!file) {
-      status.textContent = "Please select a document.";
-      return;
-    }
+  $("uploadButton").disabled = true;
+  setStatus("uploadStatus", "Uploading document...");
 
-    if (!currentUser || !db) {
-      status.textContent = "Please log in first.";
-      return;
-    }
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const path = currentUser.id + "/" +
+    crypto.randomUUID() + "-" + safeName;
 
-    status.textContent = "Uploading...";
-
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const path = currentUser.id + "/" + crypto.randomUUID() + "-" + safeName;
-
+  try {
     const { error: storageError } = await db.storage
       .from(BUCKET_NAME)
       .upload(path, file);
 
-    if (storageError) {
-      status.textContent = storageError.message;
-      return;
-    }
+    if (storageError) throw storageError;
 
     const { error: recordError } = await db
       .from("documents")
@@ -276,34 +297,38 @@
       });
 
     if (recordError) {
-      status.textContent =
-        "File uploaded, but its library record could not be saved: " +
-        recordError.message;
+      setStatus("uploadStatus",
+        "File uploaded, but library record failed: " +
+        recordError.message);
       return;
     }
 
-    status.textContent = "Document uploaded successfully!";
-    document.getElementById("fileInput").value = "";
-    loadDocuments();
+    setStatus("uploadStatus", "Document uploaded successfully!");
+    $("fileInput").value = "";
+    await loadDocuments();
+
+  } catch (error) {
+    setStatus("uploadStatus", error.message);
+  } finally {
+    $("uploadButton").disabled = false;
   }
+});
 
-  async function loadDocuments() {
-    const list = document.getElementById("documentList");
+/* LOAD LIBRARY */
+async function loadDocuments() {
+  if (!db || !currentUser) return;
 
-    if (!db || !currentUser) return;
+  const list = $("documentList");
+  list.textContent = "Loading documents...";
 
-    list.textContent = "Loading documents...";
-
+  try {
     const { data, error } = await db
       .from("documents")
-      .select("*")
+      .select("id,file_name,file_path,status,created_at")
       .eq("user_id", currentUser.id)
       .order("created_at", { ascending: false });
 
-    if (error) {
-      list.textContent = error.message;
-      return;
-    }
+    if (error) throw error;
 
     list.innerHTML = "";
 
@@ -319,69 +344,87 @@
       const name = document.createElement("strong");
       name.textContent = doc.file_name;
 
-      const details = document.createElement("p");
-      details.textContent = "Status: " + doc.status;
+      const status = document.createElement("p");
+      status.textContent = "Status: " + doc.status;
 
       const download = document.createElement("button");
       download.textContent = "Download";
-      download.onclick = () => downloadDocument(doc.file_path);
+      download.addEventListener("click", () => {
+        downloadDocument(doc.file_path);
+      });
 
-      item.append(name, details, download);
+      item.append(name, status, download);
       list.appendChild(item);
     });
-  }
 
-  async function downloadDocument(path) {
+  } catch (error) {
+    list.textContent = error.message;
+  }
+}
+
+$("refreshButton").addEventListener("click", loadDocuments);
+
+/* DOWNLOAD */
+async function downloadDocument(path) {
+  try {
     const { data, error } = await db.storage
       .from(BUCKET_NAME)
       .createSignedUrl(path, 60);
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
+    if (error) throw error;
 
     window.open(data.signedUrl, "_blank");
+
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+/* AI CHAT INTERFACE */
+$("askButton").addEventListener("click", async () => {
+  const question = $("question").value.trim();
+
+  if (!question) {
+    setStatus("aiStatus", "Please type a question.");
+    return;
   }
 
-  async function askAI() {
-    const question = document.getElementById("question").value.trim();
-    const chat = document.getElementById("chatMessages");
-    const status = document.getElementById("aiStatus");
+  const chat = $("chatMessages");
 
-    if (!question) {
-      status.textContent = "Please type a question.";
-      return;
-    }
+  const userMessage = document.createElement("div");
+  userMessage.className = "message";
+  userMessage.textContent = "You: " + question;
+  chat.appendChild(userMessage);
 
-    const userMessage = document.createElement("div");
-    userMessage.className = "message";
-    userMessage.textContent = "You: " + question;
-    chat.appendChild(userMessage);
+  $("question").value = "";
 
-    document.getElementById("question").value = "";
+  const answer = document.createElement("div");
+  answer.className = "message answer";
+  answer.textContent =
+    "The AI answering engine is not connected yet. Your question has not been processed. A secure AI backend and document text extraction are still required.";
 
-    const answer = document.createElement("div");
-    answer.className = "message";
-    answer.textContent =
-      "The AI answering engine has not been connected yet. Your question has not been processed. The next setup step is connecting a secure AI backend.";
-    chat.appendChild(answer);
+  chat.appendChild(answer);
 
-    status.textContent = "AI backend setup is still required.";
-  }
+  setStatus("aiStatus", "AI backend setup is still required.");
+});
 
-  async function checkSession() {
-    if (!db) return;
+/* RESTORE SESSION */
+async function checkSession() {
+  if (!db) return;
 
+  try {
     const { data, error } = await db.auth.getSession();
 
     if (!error && data.session) {
       currentUser = data.session.user;
       openDashboard();
     }
+  } catch (error) {
+    setStatus("loginStatus", error.message);
   }
+}
 
-  checkSession();
+checkSession();
 </script>
 
 </body>
