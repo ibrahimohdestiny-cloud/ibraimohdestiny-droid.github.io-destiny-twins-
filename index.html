@@ -5,7 +5,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101827">
+
 <title>Destiny Twins</title>
+
+<!-- Android App Settings -->
+<link rel="manifest" href="./manifest.json">
+<meta name="application-name" content="Destiny Twins">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Destiny Twins">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -101,6 +110,13 @@ footer {
   text-align: center;
   padding: 20px;
   color: #64748b;
+}
+
+@media (max-width: 600px) {
+  main { margin: 10px auto; padding: 10px; }
+  .panel { padding: 16px; }
+  header { padding: 18px 10px; }
+  .nav button { min-width: 75px; }
 }
 </style>
 </head>
@@ -204,7 +220,6 @@ if (window.pdfjsLib) {
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 }
 
-
 // LOGIN
 
 async function login() {
@@ -237,7 +252,6 @@ async function login() {
   }
 }
 
-
 // SESSION
 
 async function checkSession() {
@@ -257,7 +271,6 @@ async function showDashboard(user) {
   await loadDocuments();
 }
 
-
 // NAVIGATION
 
 function showPage(page) {
@@ -269,7 +282,6 @@ function showPage(page) {
 
   if (page === "library") loadDocuments();
 }
-
 
 // EXTRACT DOCUMENT TEXT
 
@@ -316,8 +328,7 @@ async function extractText(file) {
   throw new Error("Unsupported file format.");
 }
 
-
-// SPLIT TEXT INTO SMALLER PARTS
+// SPLIT TEXT
 
 function splitText(text) {
   const chunks = [];
@@ -340,7 +351,6 @@ function splitText(text) {
   return chunks;
 }
 
-
 // UPLOAD AND PROCESS DOCUMENT
 
 async function uploadDocument() {
@@ -359,7 +369,6 @@ async function uploadDocument() {
   }
 
   button.disabled = true;
-
   let uploadedPath = null;
 
   try {
@@ -387,7 +396,6 @@ async function uploadDocument() {
     message.textContent = "Uploading your document...";
 
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-
     const path = user.id + "/" + crypto.randomUUID() + "-" + safeName;
 
     const { error: storageError } = await db.storage
@@ -398,7 +406,7 @@ async function uploadDocument() {
 
     uploadedPath = path;
 
-    const { data: document, error: documentError } = await db
+    const { data: documentRecord, error: documentError } = await db
       .from("documents")
       .insert({
         user_id: user.id,
@@ -416,7 +424,7 @@ async function uploadDocument() {
 
     const knowledgeRows = chunks.map(content => ({
       user_id: user.id,
-      document_id: document.id,
+      document_id: documentRecord.id,
       content
     }));
 
@@ -427,14 +435,16 @@ async function uploadDocument() {
     if (knowledgeError) {
       await db.from("documents")
         .update({ status: "processing_failed" })
-        .eq("id", document.id);
+        .eq("id", documentRecord.id);
 
       throw knowledgeError;
     }
 
-    await db.from("documents")
+    const { error: updateError } = await db.from("documents")
       .update({ status: "processed" })
-      .eq("id", document.id);
+      .eq("id", documentRecord.id);
+
+    if (updateError) throw updateError;
 
     message.textContent =
       "Success! Your document was uploaded and its text was saved.";
@@ -454,7 +464,6 @@ async function uploadDocument() {
     button.disabled = false;
   }
 }
-
 
 // LIBRARY
 
@@ -509,7 +518,6 @@ async function loadDocuments() {
   });
 }
 
-
 // DOWNLOAD
 
 async function downloadDocument(path) {
@@ -524,7 +532,6 @@ async function downloadDocument(path) {
 
   window.open(data.signedUrl, "_blank");
 }
-
 
 // GEMINI AI
 
@@ -569,7 +576,6 @@ async function askAI() {
   }
 }
 
-
 // LOGOUT
 
 async function logout() {
@@ -580,10 +586,19 @@ async function logout() {
   document.getElementById("password").value = "";
 }
 
-
 // START
 
 checkSession();
+
+// REGISTER ANDROID APP SERVICE WORKER
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("Destiny Twins app is ready"))
+      .catch(error => console.error("App setup error:", error));
+  });
+}
 </script>
 
 </body>
