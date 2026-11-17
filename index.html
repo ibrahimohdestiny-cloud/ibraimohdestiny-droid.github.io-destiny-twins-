@@ -2,427 +2,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Destiny Twins - Private AI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>Destiny Twins</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>
-*{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#f1f4fa;
- color:#172033;
-}
-button,input,textarea{font:inherit}
-button{cursor:pointer}
-header{
- background:#101d42;
- color:white;
- padding:18px;
- display:flex;
- justify-content:space-between;
- align-items:center;
-}
-.brand{font-size:21px;font-weight:bold}
-#login{
- max-width:420px;
- margin:70px auto;
- padding:25px;
- background:white;
- border-radius:15px;
- box-shadow:0 5px 25px #0001;
-}
-#login h1{text-align:center;color:#2447a5}
-input,textarea{
- width:100%;
- padding:13px;
- margin:8px 0;
- border:1px solid #d6ddeb;
- border-radius:8px;
-}
-button{
- border:0;
- padding:12px 16px;
- border-radius:8px;
- background:#3159c9;
- color:white;
-}
-.primary{width:100%;margin-top:10px}
-#app{display:none}
-.layout{display:flex;min-height:90vh}
-nav{
- width:220px;
- background:white;
- padding:15px;
-}
-nav button{
- display:block;
- width:100%;
- text-align:left;
- margin-bottom:10px;
- background:#eef2ff;
- color:#203c91;
-}
-main{padding:25px;flex:1;max-width:1100px}
-.card{
- background:white;
- border-radius:13px;
- padding:20px;
- margin-bottom:18px;
- box-shadow:0 3px 15px #00000008;
-}
-.welcome{
- background:#1c367e;
- color:white;
- padding:25px;
- border-radius:13px;
-}
-.welcome p{color:#e0e7ff}
-.section{display:none}
-.section.active{display:block}
-.muted{color:#748096;font-size:14px}
-.file{
- padding:12px;
- border-bottom:1px solid #eee;
- overflow-wrap:anywhere;
-}
-#messages{
- height:300px;
- overflow:auto;
- background:#f3f5fa;
- padding:12px;
- border-radius:10px;
-}
-.message{
- padding:12px;
- margin:9px 0;
- border-radius:10px;
- background:white;
- overflow-wrap:anywhere;
-}
-.user{background:#e5edff}
-footer{text-align:center;padding:20px;color:#777}
-@media(max-width:650px){
- .layout{display:block}
- nav{
-  width:100%;
-  display:flex;
-  overflow-x:auto;
-  gap:6px;
- }
- nav button{min-width:120px;text-align:center}
- main{padding:12px}
- #login{margin:35px 15px}
-}
-</style>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f5fa;
+      color: #172033;
+    }
+    header {
+      background: #101827;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 { margin: 0; letter-spacing: 2px; }
+    header p { color: #cbd5e1; }
+    .container {
+      max-width: 850px;
+      margin: 25px auto;
+      padding: 15px;
+    }
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 3px 12px #0000000d;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccd3df;
+      font-size: 15px;
+    }
+    button {
+      background: #175bd5;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #1048ae; }
+    .secondary { background: #34445e; }
+    .danger { background: #a52c35; }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .nav button { width: auto; flex: 1; min-width: 100px; }
+    .hidden { display: none !important; }
+    .item {
+      padding: 12px;
+      border-bottom: 1px solid #e5e9f0;
+      overflow-wrap: anywhere;
+    }
+    .message {
+      background: #eef3ff;
+      padding: 12px;
+      border-radius: 9px;
+      margin: 10px 0;
+      overflow-wrap: anywhere;
+    }
+    .status { font-size: 14px; color: #526078; }
+    footer { text-align: center; padding: 25px; color: #64748b; }
+  </style>
 </head>
 
 <body>
 
 <header>
- <div class="brand">✦ DESTINY TWINS</div>
- <span>Private AI Assistant</span>
+  <h1>DESTINY TWINS</h1>
+  <p>Your Private Knowledge Assistant</p>
 </header>
 
-<div id="login">
- <h1>Destiny Twins</h1>
- <p style="text-align:center">Your personal knowledge assistant</p>
+<main class="container">
 
- <form id="loginForm">
-  <input id="email" type="email" placeholder="Email address" required>
-  <input id="password" type="password" placeholder="Password" required>
-  <button class="primary" type="submit">Login to your account</button>
- </form>
+  <section id="loginSection" class="card">
+    <h2>Admin Login</h2>
+    <p>Sign in to access your private knowledge assistant.</p>
 
- <p id="loginMessage" class="muted"></p>
-</div>
+    <input id="email" type="email" placeholder="Admin email">
+    <input id="password" type="password" placeholder="Password">
 
-<div id="app">
+    <button onclick="login()">Login</button>
+    <p id="loginStatus" class="status"></p>
+  </section>
 
-<div class="layout">
+  <section id="dashboard" class="hidden">
 
-<nav>
- <button onclick="showPage('home')">🏠 Dashboard</button>
- <button onclick="showPage('upload')">📁 Upload Documents</button>
- <button onclick="showPage('library')">📚 Knowledge Library</button>
- <button onclick="showPage('chat')">💬 AI Assistant</button>
- <button onclick="logout()">🚪 Logout</button>
-</nav>
+    <div class="card">
+      <h2>Welcome, Destiny Collins</h2>
+      <p>Your private knowledge workspace.</p>
+    </div>
 
-<main>
+    <nav class="nav">
+      <button onclick="showPage('home')">Home</button>
+      <button onclick="showPage('upload')">Upload</button>
+      <button onclick="showPage('library')">Library</button>
+      <button onclick="showPage('assistant')">AI Assistant</button>
+      <button class="danger" onclick="logout()">Logout</button>
+    </nav>
 
-<section id="home" class="section active">
- <div class="welcome">
-  <h2>Welcome to Destiny Twins</h2>
-  <p>Your private knowledge and intelligent assistant.</p>
- </div>
+    <section id="home" class="card page">
+      <h2>Dashboard</h2>
+      <p>Welcome to Destiny Twins.</p>
+      <p>Upload your documents and organise your knowledge.</p>
+      <p id="userEmail" class="status"></p>
+    </section>
 
- <div class="card">
-  <h3>📁 Your Documents</h3>
-  <h2 id="total">0</h2>
-  <p class="muted">Uploaded documents</p>
- </div>
+    <section id="upload" class="card page hidden">
+      <h2>Upload Documents</h2>
+      <p>Select a document to save in your private storage.</p>
 
- <div class="card">
-  <h3>🧠 Your Personal AI</h3>
-  <p>Upload your information and use it as the knowledge source for your AI.</p>
-  <button onclick="showPage('upload')">Upload Knowledge</button>
- </div>
-</section>
+      <input id="fileInput" type="file"
+        accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
 
-<section id="upload" class="section">
- <div class="card">
-  <h2>Upload Your Knowledge</h2>
-  <p class="muted">Choose a PDF, Word document, text file or image.</p>
+      <button onclick="uploadFile()">Upload Document</button>
+      <p id="uploadStatus" class="status"></p>
+    </section>
 
-  <input id="fileInput" type="file"
-   accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
+    <section id="library" class="card page hidden">
+      <h2>Knowledge Library</h2>
+      <button class="secondary" onclick="loadDocuments()">Refresh Library</button>
+      <div id="documentList">Your documents will appear here.</div>
+    </section>
 
-  <button class="primary" onclick="uploadFile()">Upload Document</button>
+    <section id="assistant" class="card page hidden">
+      <h2>Ask Destiny Twins</h2>
+      <p>Ask questions about your uploaded knowledge.</p>
 
-  <p id="uploadMessage"></p>
- </div>
-</section>
+      <div id="chatMessages"></div>
 
-<section id="library" class="section">
- <div class="card">
-  <h2>My Knowledge Library</h2>
-  <p class="muted">Your uploaded documents.</p>
-  <div id="fileList">Loading...</div>
- </div>
-</section>
+      <textarea id="question" rows="4"
+        placeholder="Type your question here..."></textarea>
 
-<section id="chat" class="section">
- <div class="card">
-  <h2>Destiny Twins AI</h2>
-  <p class="muted">Ask questions about your personal knowledge.</p>
+      <button onclick="askAI()">Ask Question</button>
+      <p id="aiStatus" class="status"></p>
+    </section>
 
-  <div id="messages">
-   <div class="message">
-    Hello! Welcome to Destiny Twins.
-   </div>
-  </div>
-
-  <textarea id="question"
-   placeholder="Ask your question here..."></textarea>
-
-  <button class="primary" onclick="askAI()">Send Question</button>
-
-  <p class="muted" id="chatStatus">
-   AI answering service will be connected through the secure backend.
-  </p>
- </div>
-</section>
-
+  </section>
 </main>
-</div>
-</div>
 
-<footer>© 2026 Destiny Twins. Private Knowledge AI.</footer>
+<footer>
+  Destiny Twins Private Knowledge Assistant
+</footer>
 
 <script>
+  // SUPABASE CONNECTION
+  // Replace these two values with your own details.
+  const SUPABASE_URL = "PASTE_YOUR_API_URL_HERE";
+  const SUPABASE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
 
-// SUPABASE CONNECTION
-// Replace these two placeholders with your own project details.
+  const BUCKET_NAME = "destiny-knowledge";
 
-const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-const SUPABASE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
+  let db = null;
+  let currentUser = null;
 
-let db = null;
-let currentUser = null;
+  if (
+    SUPABASE_URL.startsWith("https://") &&
+    SUPABASE_KEY.startsWith("sb_publishable_")
+  ) {
+    db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+  }
 
-if(SUPABASE_URL.startsWith("https://") &&
-   SUPABASE_KEY !== "YOUR_SUPABASE_PUBLISHABLE_KEY"){
- db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
- );
-}
+  function showPage(page) {
+    document.querySelectorAll(".page").forEach(section => {
+      section.classList.add("hidden");
+    });
 
-// LOGIN
-document.getElementById("loginForm").addEventListener("submit",async function(e){
- e.preventDefault();
+    document.getElementById(page).classList.remove("hidden");
 
- const msg=document.getElementById("loginMessage");
+    if (page === "library") loadDocuments();
+  }
 
- if(!db){
-  msg.textContent="Supabase connection details are not configured yet.";
-  return;
- }
+  async function login() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const status = document.getElementById("loginStatus");
 
- msg.textContent="Checking your account...";
+    if (!db) {
+      status.textContent = "Please add your Supabase API URL and Publishable key.";
+      return;
+    }
 
- const {data,error}=await db.auth.signInWithPassword({
-  email:document.getElementById("email").value,
-  password:document.getElementById("password").value
- });
+    if (!email || !password) {
+      status.textContent = "Enter your email and password.";
+      return;
+    }
 
- if(error){
-  msg.textContent=error.message;
-  return;
- }
+    status.textContent = "Signing in...";
 
- currentUser=data.user;
- openDashboard();
-});
+    const { data, error } = await db.auth.signInWithPassword({
+      email,
+      password
+    });
 
-// CHECK EXISTING SESSION
-async function checkSession(){
- if(!db)return;
+    if (error) {
+      status.textContent = error.message;
+      return;
+    }
 
- const {data}=await db.auth.getSession();
+    currentUser = data.user;
+    openDashboard();
+  }
 
- if(data.session){
-  currentUser=data.session.user;
-  openDashboard();
- }
-}
+  function openDashboard() {
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    document.getElementById("userEmail").textContent =
+      "Signed in as: " + currentUser.email;
+    loadDocuments();
+  }
 
-// OPEN DASHBOARD
-function openDashboard(){
- document.getElementById("login").style.display="none";
- document.getElementById("app").style.display="block";
- loadFiles();
-}
+  async function logout() {
+    if (db) await db.auth.signOut();
 
-// NAVIGATION
-function showPage(page){
- document.querySelectorAll(".section").forEach(s=>{
-  s.classList.remove("active");
- });
- document.getElementById(page).classList.add("active");
+    currentUser = null;
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("loginSection").classList.remove("hidden");
+  }
 
- if(page==="library")loadFiles();
-}
+  async function uploadFile() {
+    const file = document.getElementById("fileInput").files[0];
+    const status = document.getElementById("uploadStatus");
 
-// UPLOAD DOCUMENT
-async function uploadFile(){
- const file=document.getElementById("fileInput").files[0];
- const msg=document.getElementById("uploadMessage");
+    if (!file) {
+      status.textContent = "Please select a document.";
+      return;
+    }
 
- if(!file){
-  msg.textContent="Please select a document.";
-  return;
- }
+    if (!currentUser || !db) {
+      status.textContent = "Please log in first.";
+      return;
+    }
 
- if(!currentUser || !db){
-  msg.textContent="Please log in first.";
-  return;
- }
+    status.textContent = "Uploading...";
 
- if(file.size>20*1024*1024){
-  msg.textContent="File must be smaller than 20 MB.";
-  return;
- }
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const path = currentUser.id + "/" + crypto.randomUUID() + "-" + safeName;
 
- msg.textContent="Uploading...";
+    const { error: storageError } = await db.storage
+      .from(BUCKET_NAME)
+      .upload(path, file);
 
- const path=currentUser.id+"/"+crypto.randomUUID()+"-"+file.name;
+    if (storageError) {
+      status.textContent = storageError.message;
+      return;
+    }
 
- const {error:uploadError}=await db.storage
-  .from("destiny-knowledge")
-  .upload(path,file);
+    const { error: recordError } = await db
+      .from("documents")
+      .insert({
+        user_id: currentUser.id,
+        file_name: file.name,
+        file_path: path,
+        file_type: file.type || "unknown",
+        status: "uploaded"
+      });
 
- if(uploadError){
-  msg.textContent=uploadError.message;
-  return;
- }
+    if (recordError) {
+      status.textContent =
+        "File uploaded, but its library record could not be saved: " +
+        recordError.message;
+      return;
+    }
 
- const {error:saveError}=await db.from("documents").insert({
-  user_id:currentUser.id,
-  file_name:file.name,
-  file_path:path,
-  file_type:file.type,
-  status:"uploaded"
- });
+    status.textContent = "Document uploaded successfully!";
+    document.getElementById("fileInput").value = "";
+    loadDocuments();
+  }
 
- if(saveError){
-  msg.textContent="File stored, but its database record could not be saved: "+saveError.message;
-  return;
- }
+  async function loadDocuments() {
+    const list = document.getElementById("documentList");
 
- msg.textContent="Document uploaded successfully!";
- document.getElementById("fileInput").value="";
- loadFiles();
-}
+    if (!db || !currentUser) return;
 
-// LOAD KNOWLEDGE LIBRARY
-async function loadFiles(){
- if(!db || !currentUser)return;
+    list.textContent = "Loading documents...";
 
- const list=document.getElementById("fileList");
+    const { data, error } = await db
+      .from("documents")
+      .select("*")
+      .eq("user_id", currentUser.id)
+      .order("created_at", { ascending: false });
 
- const {data,error}=await db.from("documents")
-  .select("*")
-  .eq("user_id",currentUser.id)
-  .order("created_at",{ascending:false});
+    if (error) {
+      list.textContent = error.message;
+      return;
+    }
 
- if(error){
-  list.textContent=error.message;
-  return;
- }
+    list.innerHTML = "";
 
- document.getElementById("total").textContent=data.length;
+    if (!data || data.length === 0) {
+      list.textContent = "No documents uploaded yet.";
+      return;
+    }
 
- list.innerHTML="";
+    data.forEach(doc => {
+      const item = document.createElement("div");
+      item.className = "item";
 
- if(data.length===0){
-  list.textContent="Your knowledge library is empty.";
-  return;
- }
+      const name = document.createElement("strong");
+      name.textContent = doc.file_name;
 
- data.forEach(file=>{
-  const item=document.createElement("div");
-  item.className="file";
+      const details = document.createElement("p");
+      details.textContent = "Status: " + doc.status;
 
-  const name=document.createElement("strong");
-  name.textContent="📄 "+file.file_name;
+      const download = document.createElement("button");
+      download.textContent = "Download";
+      download.onclick = () => downloadDocument(doc.file_path);
 
-  const status=document.createElement("p");
-  status.className="muted";
-  status.textContent="Status: "+file.status;
+      item.append(name, details, download);
+      list.appendChild(item);
+    });
+  }
 
-  item.append(name,status);
-  list.appendChild(item);
- });
-}
+  async function downloadDocument(path) {
+    const { data, error } = await db.storage
+      .from(BUCKET_NAME)
+      .createSignedUrl(path, 60);
 
-// AI CHAT PLACEHOLDER
-function askAI(){
- const question=document.getElementById("question").value.trim();
- const messages=document.getElementById("messages");
+    if (error) {
+      alert(error.message);
+      return;
+    }
 
- if(!question)return;
+    window.open(data.signedUrl, "_blank");
+  }
 
- const user=document.createElement("div");
- user.className="message user";
- user.textContent="You: "+question;
- messages.appendChild(user);
+  async function askAI() {
+    const question = document.getElementById("question").value.trim();
+    const chat = document.getElementById("chatMessages");
+    const status = document.getElementById("aiStatus");
 
- const answer=document.createElement("div");
- answer.className="message";
- answer.textContent="The secure AI answering engine has not been connected yet. Your question has not been processed.";
- messages.appendChild(answer);
+    if (!question) {
+      status.textContent = "Please type a question.";
+      return;
+    }
 
- document.getElementById("question").value="";
- messages.scrollTop=messages.scrollHeight;
-}
+    const userMessage = document.createElement("div");
+    userMessage.className = "message";
+    userMessage.textContent = "You: " + question;
+    chat.appendChild(userMessage);
 
-// LOGOUT
-async function logout(){
- if(db)await db.auth.signOut();
+    document.getElementById("question").value = "";
 
- currentUser=null;
- document.getElementById("app").style.display="none";
- document.getElementById("login").style.display="block";
- document.getElementById("loginForm").reset();
-}
+    const answer = document.createElement("div");
+    answer.className = "message";
+    answer.textContent =
+      "The AI answering engine has not been connected yet. Your question has not been processed. The next setup step is connecting a secure AI backend.";
+    chat.appendChild(answer);
 
-checkSession();
+    status.textContent = "AI backend setup is still required.";
+  }
 
+  async function checkSession() {
+    if (!db) return;
+
+    const { data, error } = await db.auth.getSession();
+
+    if (!error && data.session) {
+      currentUser = data.session.user;
+      openDashboard();
+    }
+  }
+
+  checkSession();
 </script>
+
 </body>
 </html>
